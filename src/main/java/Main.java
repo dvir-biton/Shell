@@ -1,15 +1,17 @@
 import java.util.Scanner;
+import static java.util.Objects.equals;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        // Uncomment this block to pass the first stage
-        while (true) {
+        String input = "";
+
+        do {
             System.out.print("$ ");
 
             Scanner scanner = new Scanner(System.in);
-            String input = scanner.nextLine();
+            input = scanner.nextLine();
 
             System.out.println(input + ": command not found");
-        }
+        } while (!input.equals("quit"));
     }
 }
