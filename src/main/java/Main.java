@@ -9,9 +9,16 @@ public class Main {
             System.out.print("$ ");
 
             Scanner scanner = new Scanner(System.in);
-            input = scanner.nextLine();
+            input = scanner.next();
+
+            if (input.equals("exit")) {
+                if (scanner.hasNextInt()) {
+                    final int statusCode = scanner.nextInt();
+                }
+                break;
+            }
 
             System.out.println(input + ": command not found");
-        } while (!input.equals("quit"));
+        } while (true);
     }
 }
