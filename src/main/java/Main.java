@@ -1,24 +1,16 @@
 import java.util.Scanner;
-import static java.util.Objects.equals;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
-        String input = "";
+    public static void main(String[] args) {
+        final Scanner scanner = new Scanner(System.in);
+        final Parser parser = new Parser();
+        String input;
 
         do {
             System.out.print("$ ");
+            input = scanner.nextLine();
+            System.out.println(parser.parseInput(input));
 
-            Scanner scanner = new Scanner(System.in);
-            input = scanner.next();
-
-            if (input.equals("exit")) {
-                if (scanner.hasNextInt()) {
-                    final int statusCode = scanner.nextInt();
-                }
-                break;
-            }
-
-            System.out.println(input + ": command not found");
-        } while (true);
+        } while (!input.equals("exit 0"));
     }
 }
