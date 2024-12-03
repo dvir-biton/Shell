@@ -14,7 +14,7 @@ public class Parser {
                 // to eliminate the space
                 yield parserScanner.nextLine().substring(1);
             }
-            case "exit" -> input;
+            case "exit" -> null;
             default -> command + ": command not found";
         };
     }

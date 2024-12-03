@@ -9,8 +9,10 @@ public class Main {
         do {
             System.out.print("$ ");
             input = scanner.nextLine();
-            System.out.println(parser.parseInput(input));
-
+            final String output = parser.parseInput(input);
+            if (output != null) {
+                System.out.println(output);
+            }
         } while (!input.equals("exit 0"));
     }
 }
