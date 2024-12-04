@@ -50,7 +50,14 @@ public class Parser {
                 }
             }
             case CD -> {
-                currentDirectory = parserScanner.next();
+                final String argument = parserScanner.next();
+                final Path argumentPath = Path.of(argument);
+                if (Files.isDirectory(argumentPath)) {
+                    currentDirectory = argument;
+                } else {
+                    yield "cd: " + argument + ": No such file or directory";
+                }
+
                 yield null;
             }
             case PWD -> currentDirectory;
