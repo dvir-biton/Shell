@@ -47,6 +47,7 @@ public class Parser {
                     yield argument + " is " + commandPath;
                 }
             }
+            case PWD -> System.getProperty("user.dir");
             case CommandHandler.Command.EXIT -> null;
         };
     }

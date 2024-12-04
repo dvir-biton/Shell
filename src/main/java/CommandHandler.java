@@ -10,6 +10,7 @@ public class CommandHandler {
     public enum Command {
         ECHO,
         TYPE,
+        PWD,
         EXIT
     }
 }
