@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Scanner;
@@ -9,7 +10,19 @@ public class Parser {
         final String commandStr = parserScanner.next();
         final CommandHandler.Command command = CommandHandler.parseCommand(commandStr);
         if (command == null) {
-            return commandStr + ": command not found";
+            try {
+                final String[] commandArguments = input.split(" ");
+                final String fullFilePath = findCommandPath(commandArguments[0]);
+                if (fullFilePath == null) {
+                    return commandStr + ": command not found";
+                }
+                commandArguments[0] = fullFilePath;
+                Process process = new ProcessBuilder(commandArguments).start();
+                process.getInputStream().transferTo(System.out);
+                return null;
+            } catch (IOException e) {
+                return commandStr + ": command not found";
+            }
         }
 
         return switch (command) {
@@ -38,20 +51,21 @@ public class Parser {
         };
     }
 
-    private String findCommandPath(final String commaand) {
-        final String PATH = System.getenv("PATH");
-        if (PATH == null) {
-            return null;
-        }
+    private String findCommandPath(final String command) {
+        final String PATH = getPath();
 
         final String[] paths = PATH.split(":");
         for (final String path : paths) {
-            Path commandPath = Path.of(path, commaand);
+            Path commandPath = Path.of(path, command);
             if (Files.isRegularFile(commandPath)) {
                 return commandPath.toString();
             }
         }
 
         return null;
+    }
+
+    private String getPath() {
+        return System.getenv("PATH");
     }
 }
