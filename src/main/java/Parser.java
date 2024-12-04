@@ -4,6 +4,8 @@ import java.nio.file.Path;
 import java.util.Scanner;
 
 public class Parser {
+    String currentDirectory = System.getProperty("user.dir");
+
     public String parseInput(final String input) {
         final Scanner parserScanner = new Scanner(input);
 
@@ -47,7 +49,11 @@ public class Parser {
                     yield argument + " is " + commandPath;
                 }
             }
-            case PWD -> System.getProperty("user.dir");
+            case CD -> {
+                currentDirectory = parserScanner.next();
+                yield null;
+            }
+            case PWD -> currentDirectory;
             case CommandHandler.Command.EXIT -> null;
         };
     }

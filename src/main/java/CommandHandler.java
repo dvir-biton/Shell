@@ -11,6 +11,7 @@ public class CommandHandler {
         ECHO,
         TYPE,
         PWD,
+        CD,
         EXIT
     }
 }
