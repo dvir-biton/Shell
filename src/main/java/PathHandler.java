@@ -17,9 +17,6 @@ public class PathHandler {
     }
 
     public static String parsePath(String path, String currentPath) {
-        if (!path.contains("/") && !path.contains("\\\\")) {
-            return null;
-        }
         path = path.replace('\\', '/');
 
         StringBuilder pathBuilder = new StringBuilder();
@@ -36,7 +33,10 @@ public class PathHandler {
                     currentPath = getParentDirectory(currentPath);
                     pathBuilder.append(currentPath);
                 }
-                case HOME -> currentPath = getHomePath();
+                case HOME -> {
+                    currentPath = getHomePath();
+                    pathBuilder.append(currentPath);
+                }
                 // not a relative path
                 case null -> {
                     if (!pathItem.isBlank()) {
