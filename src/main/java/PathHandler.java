@@ -27,16 +27,16 @@ public class PathHandler {
         for (final String pathItem : pathItems) {
             final RelativePath relativePath = RelativePath.getPathBySign(pathItem);
 
+            if (relativePath != null) {
+                pathBuilder.setLength(0);
+            }
             switch (relativePath) {
-                case CURRENT_DIRECTORY -> {
-                    pathBuilder.setLength(0);
-                    pathBuilder.append(currentPath);
-                }
-                case PARENT_DIRECTORY -> {
-                    pathBuilder.setLength(0);
+                case CURRENT -> pathBuilder.append(currentPath);
+                case PARENT -> {
                     currentPath = getParentDirectory(currentPath);
                     pathBuilder.append(currentPath);
                 }
+                case HOME -> currentPath = getHomePath();
                 // not a relative path
                 case null -> {
                     if (!pathItem.isBlank()) {
@@ -58,9 +58,14 @@ public class PathHandler {
         return System.getenv("PATH");
     }
 
+    private static String getHomePath() {
+        return System.getenv("HOME");
+    }
+
     enum RelativePath {
-        CURRENT_DIRECTORY("."),
-        PARENT_DIRECTORY("..");
+        CURRENT("."),
+        PARENT(".."),
+        HOME("~");
 
         public final String sign;
 
