@@ -13,14 +13,17 @@ public class Parser {
         final CommandHandler.Command command = CommandHandler.parseCommand(commandStr);
         if (command == null) {
             try {
+                // check for process if not a builtin command
                 final String[] commandArguments = input.split(" ");
-                final String fullFilePath = findCommandPath(commandArguments[0]);
+                final String fullFilePath = PathHandler.findPath(commandArguments[0]);
                 if (fullFilePath == null) {
                     return commandStr + ": command not found";
                 }
+
                 commandArguments[0] = fullFilePath;
                 Process process = new ProcessBuilder(commandArguments).start();
                 process.getInputStream().transferTo(System.out);
+
                 return null;
             } catch (IOException e) {
                 return commandStr + ": command not found";
@@ -41,7 +44,7 @@ public class Parser {
                 if (CommandHandler.parseCommand(argument) != null) {
                     yield argument + " is a shell builtin";
                 } else {
-                    final String commandPath = findCommandPath(argument);
+                    final String commandPath = PathHandler.findPath(argument);
                     if (commandPath == null) {
                         yield argument + ": not found";
                     }
@@ -51,9 +54,9 @@ public class Parser {
             }
             case CD -> {
                 final String argument = parserScanner.next();
-                final Path argumentPath = Path.of(argument);
-                if (Files.isDirectory(argumentPath)) {
-                    currentDirectory = argument;
+                final String parsedPath = PathHandler.parsePath(argument, currentDirectory);
+                if (parsedPath != null && Files.isDirectory(Path.of(parsedPath))) {
+                    currentDirectory = parsedPath;
                 } else {
                     yield "cd: " + argument + ": No such file or directory";
                 }
@@ -63,23 +66,5 @@ public class Parser {
             case PWD -> currentDirectory;
             case CommandHandler.Command.EXIT -> null;
         };
-    }
-
-    private String findCommandPath(final String command) {
-        final String PATH = getPath();
-
-        final String[] paths = PATH.split(":");
-        for (final String path : paths) {
-            Path commandPath = Path.of(path, command);
-            if (Files.isRegularFile(commandPath)) {
-                return commandPath.toString();
-            }
-        }
-
-        return null;
-    }
-
-    private String getPath() {
-        return System.getenv("PATH");
     }
 }
